@@ -10,18 +10,23 @@ import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 
 
-import AuthContext from '../../context/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import {Container, Content, Background} from './styles';
 import getValidationErrors from './../../utils/getValidationErrors';
+import { sign } from 'crypto';
 
-
+interface SignInFormData{
+    email: string,
+    password: string,
+}
 
 const SignIn: React.FC = () =>{ 
     const formRef = useRef<FormHandles>(null);
 
-    const { name } = useContext(AuthContext);
-console.log(name)
-    const handleSubmit = useCallback(async (data: object) => {
+    const { singIn } = useContext(AuthContext);
+
+
+    const handleSubmit = useCallback(async (data: SignInFormData) => {
         try {
             formRef.current?.setErrors({});// inicia os erros como vazio para sempre revalidar
 
@@ -33,12 +38,17 @@ console.log(name)
             await schema.validate(data,{
                 abortEarly: false,
             });
+            console.log(data.email + ''+ data.password)
+            singIn({
+                email: data.email, 
+                password: data.password,
+            });
         } catch (err) {
             const errors = getValidationErrors(err);
 
             formRef.current?.setErrors(errors);
         }
-    },[]);
+    },[singIn]);
 
     return (
         <Container>
