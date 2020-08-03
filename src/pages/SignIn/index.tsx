@@ -23,9 +23,9 @@ interface SignInFormData{
 const SignIn: React.FC = () =>{ 
     const formRef = useRef<FormHandles>(null);
 
-    const { singIn } = useContext(AuthContext);
+    const { user, singIn } = useContext(AuthContext);
 
-
+    console.log(user)
     const handleSubmit = useCallback(async (data: SignInFormData) => {
         try {
             formRef.current?.setErrors({});// inicia os erros como vazio para sempre revalidar
@@ -38,7 +38,7 @@ const SignIn: React.FC = () =>{
             await schema.validate(data,{
                 abortEarly: false,
             });
-            console.log(data.email + ''+ data.password)
+
             singIn({
                 email: data.email, 
                 password: data.password,
